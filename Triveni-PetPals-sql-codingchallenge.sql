@@ -1,4 +1,4 @@
---1.Provide a SQL script that initializes the database for the Pet Adoption Platform ”PetPals”.
+--1.Provide a SQL script that initializes the database for the Pet Adoption Platform â€PetPalsâ€.
 CREATE DATABASE PetPals;
 USE PetPals;
 --2.Create tables for pets, shelters, donations, adoption events, and participants. 
@@ -159,16 +159,21 @@ select *from Shelters;
 --8 Write an SQL query that calculates and retrieves the total donation amount for each shelter (by 
 --shelter name) from the "Donations" table. The result should include the shelter name and the 
 --total donation amount. Ensure that the query handles cases where a shelter has received no donations
-SELECT
-    S.ShelterID,
-    S.ShelterName,
-    COALESCE(SUM(D.DonationAmount), 0) AS TotalDonationAmount
-FROM
-    Shelters S
-LEFT JOIN
-    Donations D ON S.ShelterID = D.DonationID
-GROUP BY
-    S.ShelterID, S.ShelterName;
+alter table Donations add ShelterID int foreign key references Shelters(ShelterID);
+update Donations set ShelterID = 1 where DonationID = 1;
+update Donations set ShelterID = 2 where DonationID = 2;
+update Donations set ShelterID = 3 where DonationID = 3;
+update Donations set ShelterID = 4 where DonationID = 4;
+update Donations set ShelterID = 5 where DonationID = 5;
+update Donations set ShelterID = 5 where DonationID = 6;
+update Donations set ShelterID = 7 where DonationID = 7;
+update Donations set ShelterID = 8 where DonationID = 8;
+update Donations set ShelterID = 10 where DonationID = 9;
+update Donations set ShelterID = 10 where DonationID = 10;
+select S.Name as [Shelter Name], coalesce(sum(D.DonationAmount), 0) as [Total Donation Amount]
+from Shelters S 
+left join Donations D on S.ShelterID=D.ShelterID 
+group by S.ShelterID, S.Name;
 
 
 --9. Write an SQL query that retrieves the names of pets from the "Pets" table that do not have an 
@@ -224,17 +229,21 @@ WHERE (Age BETWEEN 1 AND 3) OR (Age > 5);
 
 --12. Retrieve a list of pets and their respective shelters where the pets are currently available for 
 --adoption.
-SELECT
-    P.Name AS PetName,
-    P.Breed,
-    P.Type,
-    S.ShelterName
-FROM
-    Pets P
-JOIN
-    Shelters S ON P.PetID = S.ShelterID
-WHERE
-    P.AvailableForAdoption = 1;
+alter table Pets add ShelterID int foreign key references Shelters(ShelterID);
+update Pets set ShelterID = 1 where PetID = 1;
+update Pets set ShelterID = 2 where PetID = 2;
+update Pets set ShelterID = 1 where PetID = 3;
+update Pets set ShelterID = 4 where PetID = 4;
+update Pets set ShelterID = 5 where PetID = 5;
+update Pets set ShelterID = 5 where PetID = 6;
+update Pets set ShelterID = 7 where PetID = 7;
+update Pets set ShelterID = 8 where PetID = 8;
+update Pets set ShelterID = 10 where PetID = 9;
+update Pets set ShelterID = 10 where PetID = 10;
+select P.Name as [Pet Name], S.Name as [Shelter Name] 
+from Pets P 
+left join Shelters S on P.ShelterID = S.ShelterID 
+where P.AvailableForAdoption = 1;
 
 --13.Find the total number of participants in events organized by shelters located in specific city
 
