@@ -259,6 +259,13 @@ WHERE
     P.ParticipantType = 'Shelter'
     AND S.ShelterLocation = 'Mumbai';
 
+---(OR)
+select count(P.ParticipantID) as [Total Participants] 
+from Participants P 
+join AdoptionEvents AE on P.EventID = AE.EventID
+join Shelters S on AE.Location = S.Location 
+where S.Location = 'Lucknow, Uttar Pradesh';
+
 --14. Retrieve a list of unique breeds for pets with ages between 1 and 5 years
 SELECT DISTINCT Breed,Age
 FROM Pets
@@ -295,28 +302,20 @@ INSERT INTO Adoptions (AdoptionID, PetID, AdopterID, AdoptionDate) VALUES
 (2, 2, 2, '2023-02-15');
 
 -- Retrieve names of adopted pets and adopters
-SELECT P.Name AS PetName, P.Breed, U.UserName AS AdopterName
-FROM Pets P
-JOIN Adoptions A ON P.PetID = A.PetID
-JOIN Users U ON A.AdopterID = U.UserID;
-
+select P.Name [Name of Pet], U.UserName as [Adopter Name]
+from Pets as P 
+join Adoption as A on P.PetID = A.PetID 
+join Users U on A.UserID = U.UserID;
 
 
 --17.Retrieve a list of all shelters along with the count of pets currently available for adoption in each 
 --shelter.
 
-SELECT
-    S.ShelterID,
-    S.ShelterName,
-    COUNT(P.PetID) AS AvailablePetsCount
-FROM
-    Shelters S
-LEFT JOIN
-    Pets P ON S.ShelterID = P.PetID
-WHERE
-    P.AvailableForAdoption = 1 
-GROUP BY
-    S.ShelterID, S.ShelterName;
+select S.ShelterID, S.Name AS ShelterName, count(P.PetID) as [Pets Available For Adoption]
+from Shelters S
+left join Pets P ON S.ShelterID = P.ShelterID
+where P.AvailableForAdoption = 1
+group by S.ShelterID, S.Name;
 
 
 -- 18.Find pairs of pets from the same shelter that have the same breed.
